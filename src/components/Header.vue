@@ -24,12 +24,12 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   name: 'Header',
   methods: {
-    toggleAuthModal() {
-      this.$store.commit('toggleAuthModal');
-    },
+    ...mapMutations(['toggleAuthModal']),
   },
 
 };
