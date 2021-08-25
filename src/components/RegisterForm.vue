@@ -26,7 +26,8 @@
           border border-gray-300
           transition
           duration-500
-          focus:outline-none focus:border-black
+          focus:outline-none
+          focus:border-black
           rounded
         "
         placeholder="Enter Name"
@@ -48,7 +49,8 @@
           border border-gray-300
           transition
           duration-500
-          focus:outline-none focus:border-black
+          focus:outline-none
+          focus:border-black
           rounded
         "
         placeholder="Enter Email"
@@ -70,7 +72,8 @@
           border border-gray-300
           transition
           duration-500
-          focus:outline-none focus:border-black
+          focus:outline-none
+          focus:border-black
           rounded
         "
       />
@@ -86,6 +89,7 @@
         v-slot="{ field, errors }"
       >
         <input
+          type="password"
           class="
             block
             w-full
@@ -95,7 +99,8 @@
             border border-gray-300
             transition
             duration-500
-            focus:outline-none focus:border-black
+            focus:outline-none
+            focus:border-black
             rounded
           "
           placeholder="Password"
@@ -122,7 +127,8 @@
           border border-gray-300
           transition
           duration-500
-          focus:outline-none focus:border-black
+          focus:outline-none
+          focus:border-black
           rounded
         "
         placeholder="Confirm Password"
@@ -144,7 +150,8 @@
           border border-gray-300
           transition
           duration-500
-          focus:outline-none focus:border-black
+          focus:outline-none
+          focus:border-black
           rounded
         "
       >
@@ -186,6 +193,7 @@
   </vee-form>
 </template>
 <script>
+import { auth, createUserWithEmailAndPassword } from '@/includes/firebase';
 
 export default {
   name: 'RegisterForm',
@@ -210,17 +218,29 @@ export default {
     };
   },
   methods: {
-    register(values) {
+    async register(values) {
       this.reg_show_alert = true;
       this.reg_in_submission = true;
       this.reg_alert_variant = 'bg-blue-500';
       this.reg_alert_msg = 'Please wait! Your account is being created.';
 
+      let userCred = null;
+      try {
+        userCred = await createUserWithEmailAndPassword(
+          auth, values.email, values.password,
+        );
+      } catch (error) {
+        this.reg_in_submission = false;
+        this.reg_alert_variant = 'bg-red-500';
+        this.reg_alert_msg = 'An unexpected error ocurred. Please try again later.';
+        console.log(error);
+        return;
+      }
+
       this.reg_alert_variant = 'bg-green-500';
       this.reg_alert_msg = 'Success! Your account has been created.';
-      console.log(values);
+      console.log(userCred);
     },
   },
-
 };
 </script>
