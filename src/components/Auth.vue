@@ -1,9 +1,5 @@
 <template>
-  <div
-    class="fixed z-10 inset-0 overflow-y-auto"
-    id="modal"
-    :class="{ hidden: !authModalShow }"
-  >
+  <div class="fixed z-10 inset-0 overflow-y-auto" id="modal" :class="{ hidden: !authModalShow }">
     <div
       class="
         flex
@@ -22,9 +18,7 @@
       </div>
 
       <!-- This element is to trick the browser into centering the modal contents. -->
-      <span class="hidden sm:inline-block sm:align-middle sm:h-screen"
-        >&#8203;</span
-      >
+      <span class="hidden sm:inline-block sm:align-middle sm:h-screen">&#8203;</span>
 
       <div
         class="
@@ -46,10 +40,7 @@
           <div class="flex justify-between items-center pb-4">
             <p class="text-2xl font-bold">Your Account</p>
             <!-- Modal Close Button -->
-            <div
-              class="modal-close cursor-pointer z-50"
-              @click.prevent="toggleAuthModal"
-            >
+            <div class="modal-close cursor-pointer z-50" @click.prevent="toggleAuthModal">
               <i class="fas fa-times"></i>
             </div>
           </div>
@@ -63,7 +54,7 @@
                 @click.prevent="tab = 'login'"
                 :class="{
                   'hover:text-white text-white bg-blue-600': tab === 'login',
-                  'hover:text-blue-600': tab === 'register',
+                  'hover:text-blue-600': tab === 'register'
                 }"
                 >Login</a
               >
@@ -75,14 +66,14 @@
                 @click.prevent="tab = 'register'"
                 :class="{
                   'hover:text-white text-white bg-blue-600': tab === 'register',
-                  'hover:text-blue-600': tab === 'login',
+                  'hover:text-blue-600': tab === 'login'
                 }"
                 >Register</a
               >
             </li>
           </ul>
 
-          <app-login-form v-if="tab === 'login'"/>
+          <app-login-form v-if="tab === 'login'" />
           <app-register-form v-else />
         </div>
       </div>
