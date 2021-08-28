@@ -1,6 +1,5 @@
 <template>
-
-<!-- Header -->
+  <!-- Header -->
   <header id="header" class="bg-gray-700">
     <nav class="container mx-auto flex justify-start items-center py-5 px-4">
       <!-- App Name -->
@@ -10,13 +9,19 @@
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
           <!-- Navigation Links -->
-          <li>
+          <li v-if="!userLoggedIn">
             <a class="px-2 text-white" href="#" @click.prevent="toggleAuthModal">
-              Login / Register</a>
+              Login / Register</a
+            >
           </li>
-          <li>
-            <a class="px-2 text-white" href="#">Manage</a>
-          </li>
+          <template v-else>
+            <li>
+              <a class="px-2 text-white" href="#">Manage</a>
+            </li>
+            <li>
+              <a class="px-2 text-white" href="#" @click.prevent="signout">Logout</a>
+            </li>
+          </template>
         </ul>
       </div>
     </nav>
@@ -24,13 +29,16 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapState, mapActions } from 'vuex';
 
 export default {
   name: 'Header',
+  computed: {
+    ...mapState(['userLoggedIn']),
+  },
   methods: {
     ...mapMutations(['toggleAuthModal']),
+    ...mapActions(['signout']),
   },
-
 };
 </script>

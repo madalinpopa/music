@@ -1,7 +1,9 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import {
-  getFirestore, collection, addDoc,
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
+} from 'firebase/auth';
+import {
+  getFirestore, doc, setDoc,
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -18,11 +20,17 @@ initializeApp(firebaseConfig);
 
 const db = getFirestore();
 const auth = getAuth();
-const userCollection = collection(db, 'users');
+
+// Function to add a document
+function addDocument(docColl, docId, docData) {
+  const newDoc = setDoc(doc(db, docColl, docId), docData);
+  return newDoc;
+}
 
 export {
   auth,
   createUserWithEmailAndPassword,
-  addDoc,
-  userCollection,
+  signInWithEmailAndPassword,
+  signOut,
+  addDocument,
 };
