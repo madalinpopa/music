@@ -5,6 +5,7 @@ import {
 import {
   getFirestore, doc, setDoc,
 } from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDt011TGCb4dx-yBz5M85JhtNJLwUduUk8',
@@ -20,6 +21,7 @@ initializeApp(firebaseConfig);
 
 const db = getFirestore();
 const auth = getAuth();
+const storage = getStorage();
 
 // Function to add a document
 function addDocument(docColl, docId, docData) {
@@ -33,4 +35,7 @@ export {
   signInWithEmailAndPassword,
   signOut,
   addDocument,
+  storage,
+  ref,
+  uploadBytesResumable,
 };
