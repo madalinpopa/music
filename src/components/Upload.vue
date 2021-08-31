@@ -33,6 +33,7 @@
       >
         <h5>Drop your files here</h5>
       </div>
+      <input type="file" multiple @change="upload($event)" />
       <hr class="my-6" />
       <!-- Progess Bars -->
       <div class="mb-4" v-for="upload in uploads" :key="upload.name">
@@ -53,7 +54,9 @@
   </div>
 </template>
 <script>
-import { storage, ref, uploadBytesResumable } from '@/includes/firebase';
+import {
+  storage, ref, uploadBytesResumable, auth, setDocument, getDownloadURL,
+} from '@/includes/firebase';
 
 export default {
   name: 'Upload',
@@ -68,7 +71,8 @@ export default {
       this.is_dragover = false;
 
       // converting an object to an array
-      const files = [...$event.dataTransfer.files];
+      const files = $event.dataTransfer
+        ? [...$event.dataTransfer.files] : [...$event.target.files];
 
       files.forEach((file) => {
         if (file.type !== 'audio/mpeg') {
@@ -95,14 +99,27 @@ export default {
           this.uploads[uploadIndex].current_progress = progress;
         }, (error) => {
           this.uploads[uploadIndex].variant = 'bg-red-400';
-          this.upload[uploadIndex].icon = 'fas fa-times';
-          this.upload[uploadIndex].text_class = 'text-red-400';
+          this.uploads[uploadIndex].icon = 'fas fa-times';
+          this.uploads[uploadIndex].text_class = 'text-red-400';
           console.log(error);
         },
-        () => {
+        async () => {
+          const song = {
+            uid: auth.currentUser.uid,
+            display_name: auth.currentUser.displayName,
+            original_name: task.snapshot.ref.name,
+            modified_name: task.snapshot.ref.name,
+            genre: '',
+            comment_count: 0,
+          };
+
+          song.url = await getDownloadURL(task.snapshot.ref);
+
+          setDocument('songs', song);
+
           this.uploads[uploadIndex].variant = 'bg-green-400';
-          this.upload[uploadIndex].icon = 'fas fa-check';
-          this.upload[uploadIndex].text_class = 'text-green-400';
+          this.uploads[uploadIndex].icon = 'fas fa-check';
+          this.uploads[uploadIndex].text_class = 'text-green-400';
         });
       });
       console.log(files);

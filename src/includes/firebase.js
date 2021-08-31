@@ -1,11 +1,13 @@
 import { initializeApp } from 'firebase/app';
 import {
-  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut,
 } from 'firebase/auth';
 import {
-  getFirestore, doc, setDoc,
+  getFirestore, addDoc, collection, doc, setDoc,
 } from 'firebase/firestore';
-import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import {
+  getStorage, ref, uploadBytesResumable, getDownloadURL,
+} from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyDt011TGCb4dx-yBz5M85JhtNJLwUduUk8',
@@ -29,13 +31,22 @@ function addDocument(docColl, docId, docData) {
   return newDoc;
 }
 
+// Function to add a document with generated id
+function setDocument(collName, data) {
+  const newDoc = addDoc(collection(db, collName), data);
+  return newDoc;
+}
+
 export {
   auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
   signOut,
   addDocument,
+  setDocument,
   storage,
   ref,
   uploadBytesResumable,
+  getDownloadURL,
 };

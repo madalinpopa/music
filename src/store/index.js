@@ -1,6 +1,6 @@
 import { createStore } from 'vuex';
 import {
-  auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, addDocument,
+  auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut, addDocument,
 } from '@/includes/firebase';
 
 export default createStore({
@@ -23,7 +23,8 @@ export default createStore({
     async register({ commit }, payload) {
       const userCred = await createUserWithEmailAndPassword(auth, payload.email, payload.password);
 
-      userCred.user.displayName = payload.name;
+      // userCred.user.displayName = payload.name;
+      updateProfile(userCred.user, { displayName: payload.name });
 
       console.log(userCred);
       await addDocument('users', userCred.user.uid, {
