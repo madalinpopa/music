@@ -49,13 +49,18 @@
             :style="{ width: upload.current_progress + '%' }"
           ></div>
         </div>
-      </div>
+       </div>
     </div>
   </div>
 </template>
 <script>
 import {
-  storage, ref, uploadBytesResumable, auth, setDocument, getDownloadURL,
+  storage,
+  ref,
+  uploadBytesResumable,
+  auth,
+  setDocument,
+  getDownloadURL,
 } from '@/includes/firebase';
 
 export default {
@@ -72,7 +77,8 @@ export default {
 
       // converting an object to an array
       const files = $event.dataTransfer
-        ? [...$event.dataTransfer.files] : [...$event.target.files];
+        ? [...$event.dataTransfer.files]
+        : [...$event.target.files];
 
       files.forEach((file) => {
         if (file.type !== 'audio/mpeg') {
@@ -94,37 +100,50 @@ export default {
           text_class: '',
         }) - 1;
 
-        task.on('state_changed', (snapshot) => {
-          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          this.uploads[uploadIndex].current_progress = progress;
-        }, (error) => {
-          this.uploads[uploadIndex].variant = 'bg-red-400';
-          this.uploads[uploadIndex].icon = 'fas fa-times';
-          this.uploads[uploadIndex].text_class = 'text-red-400';
-          console.log(error);
-        },
-        async () => {
-          const song = {
-            uid: auth.currentUser.uid,
-            display_name: auth.currentUser.displayName,
-            original_name: task.snapshot.ref.name,
-            modified_name: task.snapshot.ref.name,
-            genre: '',
-            comment_count: 0,
-          };
+        task.on(
+          'state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            this.uploads[uploadIndex].current_progress = progress;
+          },
+          (error) => {
+            this.uploads[uploadIndex].variant = 'bg-red-400';
+            this.uploads[uploadIndex].icon = 'fas fa-times';
+            this.uploads[uploadIndex].text_class = 'text-red-400';
+            console.log(error);
+          },
+          async () => {
+            const song = {
+              uid: auth.currentUser.uid,
+              display_name: auth.currentUser.displayName,
+              original_name: task.snapshot.ref.name,
+              modified_name: task.snapshot.ref.name,
+              genre: '',
+              comment_count: 0,
+            };
 
-          song.url = await getDownloadURL(task.snapshot.ref);
+            song.url = await getDownloadURL(task.snapshot.ref);
 
-          setDocument('songs', song);
+            setDocument('songs', song);
 
-          this.uploads[uploadIndex].variant = 'bg-green-400';
-          this.uploads[uploadIndex].icon = 'fas fa-check';
-          this.uploads[uploadIndex].text_class = 'text-green-400';
-        });
+            this.uploads[uploadIndex].variant = 'bg-green-400';
+            this.uploads[uploadIndex].icon = 'fas fa-check';
+            this.uploads[uploadIndex].text_class = 'text-green-400';
+          },
+        );
       });
       console.log(files);
     },
+    cancelUploads() {
+      this.uploads.forEach((upload) => {
+        upload.task.cancel();
+      });
+    },
+  },
+  beforeUnmount() {
+    this.uploads.forEach((upload) => {
+      upload.task.cancel();
+    });
   },
 };
-
 </script>

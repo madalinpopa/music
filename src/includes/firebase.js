@@ -1,12 +1,26 @@
 import { initializeApp } from 'firebase/app';
 import {
-  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut,
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  signOut,
 } from 'firebase/auth';
 import {
-  getFirestore, addDoc, collection, doc, setDoc,
+  getFirestore,
+  addDoc,
+  collection,
+  doc,
+  setDoc,
+  query,
+  where,
+  getDocs,
 } from 'firebase/firestore';
 import {
-  getStorage, ref, uploadBytesResumable, getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
 } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -24,6 +38,7 @@ initializeApp(firebaseConfig);
 const db = getFirestore();
 const auth = getAuth();
 const storage = getStorage();
+const songsCollection = collection(db, 'songs');
 
 // Function to add a document
 function addDocument(docColl, docId, docData) {
@@ -49,4 +64,8 @@ export {
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  songsCollection,
+  query,
+  where,
+  getDocs,
 };
