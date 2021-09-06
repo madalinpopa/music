@@ -15,6 +15,8 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
+  updateDoc,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -52,6 +54,19 @@ function setDocument(collName, data) {
   return newDoc;
 }
 
+// Function to get document by Id
+async function getDocumentById(id) {
+  const docRef = doc(db, 'songs', id);
+  const docSnap = await getDoc(docRef);
+  return docSnap;
+}
+
+// Function to update the document by id
+async function updateDocumentById(id, payload) {
+  const docRef = doc(db, 'songs', id);
+  await updateDoc(docRef, payload);
+}
+
 export {
   auth,
   createUserWithEmailAndPassword,
@@ -68,4 +83,6 @@ export {
   query,
   where,
   getDocs,
+  updateDocumentById,
+  getDocumentById,
 };
