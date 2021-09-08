@@ -4,6 +4,7 @@
       <h4 class="inline-block text-2xl font-bold">{{ song.modified_name }}</h4>
       <button
         class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right"
+        @click.prevent="deleteSong"
       >
         <i class="fa fa-times"></i>
       </button>
@@ -97,7 +98,9 @@
   </div>
 </template>
 <script>
-import { updateDocumentById } from '@/includes/firebase';
+import {
+  updateDocumentById, storage, ref, deleteObject, deleteDocumentById,
+} from '@/includes/firebase';
 
 export default {
   name: 'CompositionItem',
@@ -112,6 +115,10 @@ export default {
     },
     index: {
       type: Number,
+      required: true,
+    },
+    removeSong: {
+      type: Function,
       required: true,
     },
   },
@@ -149,6 +156,18 @@ export default {
       this.in_submission = false;
       this.alert_variant = 'bg-green-500';
       this.alert_message = 'Success!';
+    },
+    async deleteSong() {
+      const songRef = ref(storage, `songs/${this.song.original_name}`);
+
+      // delete the file from the storage
+      await deleteObject(songRef);
+
+      // delete the document from the collection
+      deleteDocumentById(this.song.docID);
+
+      // update ui
+      this.removeSong(this.index);
     },
   },
 };

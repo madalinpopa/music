@@ -61,6 +61,7 @@ import {
   auth,
   setDocument,
   getDownloadURL,
+  getDocumentByReference,
 } from '@/includes/firebase';
 
 export default {
@@ -71,6 +72,7 @@ export default {
       uploads: [],
     };
   },
+  props: ['addSong'],
   methods: {
     upload($event) {
       this.is_dragover = false;
@@ -124,7 +126,13 @@ export default {
 
             song.url = await getDownloadURL(task.snapshot.ref);
 
-            setDocument('songs', song);
+            const songRef = setDocument('songs', song);
+            const songSnapshot = getDocumentByReference(task.snapshot);
+
+            console.log(songRef);
+            // console.log(songSnapshot);
+
+            this.addSong(songSnapshot);
 
             this.uploads[uploadIndex].variant = 'bg-green-400';
             this.uploads[uploadIndex].icon = 'fas fa-check';

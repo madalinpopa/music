@@ -2,7 +2,7 @@
   <section class="container mx-auto mt-6">
     <div class="md:grid md:grid-cols-3 md:gap-4">
       <div class="col-span-1">
-        <app-upload ref="upload" />
+        <app-upload ref="upload" :addSong="addSong" />
       </div>
       <div class="col-span-2">
         <div
@@ -18,7 +18,8 @@
             <!-- Composition Items -->
             <composition-item v-for="(song, i) in songs" :key="song.docID" :song="song"
             :updateSong="updateSong"
-            :index="i" />
+            :index="i"
+            :removeSong="removeSong" />
           </div>
         </div>
       </div>
@@ -51,20 +52,25 @@ export default {
   async created() {
     const q = query(songsCollection, where('uid', '==', auth.currentUser.uid));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((document) => {
-      const song = {
-        ...document.data(),
-        docID: document.id,
-      };
-      this.songs.push(song);
-    });
+    querySnapshot.forEach(this.addSong);
   },
   methods: {
     updateSong(i, values) {
       this.songs[i].modified_name = values.modified_name;
       this.songs[i].genre = values.genre;
     },
+    removeSong(i) {
+      this.songs.splice(i, 1);
+    },
+    addSong(document) {
+      const song = {
+        ...document.data(),
+        docID: document.id,
+      };
+      this.songs.push(song);
+    },
   },
+
   // beforeRouteLeave(to, from, next) {
   //   this.$refs.upload.cancelUploads();
   //   next();

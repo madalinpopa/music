@@ -17,12 +17,14 @@ import {
   getDocs,
   getDoc,
   updateDoc,
+  deleteDoc,
 } from 'firebase/firestore';
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
 } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -67,6 +69,18 @@ async function updateDocumentById(id, payload) {
   await updateDoc(docRef, payload);
 }
 
+// Function to delete a document by id
+async function deleteDocumentById(id) {
+  const docRef = doc(db, 'songs', id);
+  await deleteDoc(docRef);
+}
+
+// Function get a document by reference
+async function getDocumentByReference(docRef) {
+  const docSnap = await getDoc(docRef);
+  return docSnap;
+}
+
 export {
   auth,
   createUserWithEmailAndPassword,
@@ -77,12 +91,15 @@ export {
   setDocument,
   storage,
   ref,
+  deleteObject,
   uploadBytesResumable,
   getDownloadURL,
   songsCollection,
   query,
   where,
   getDocs,
+  getDocumentByReference,
   updateDocumentById,
   getDocumentById,
+  deleteDocumentById,
 };
