@@ -127,10 +127,10 @@ export default {
             song.url = await getDownloadURL(task.snapshot.ref);
 
             const songRef = setDocument('songs', song);
-            const songSnapshot = getDocumentByReference(task.snapshot);
+            const songSnapshot = getDocumentByReference(song.uid);
 
             console.log(songRef);
-            // console.log(songSnapshot);
+            console.log(songSnapshot);
 
             this.addSong(songSnapshot);
 
