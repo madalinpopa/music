@@ -76,9 +76,9 @@ async function deleteDocumentById(id) {
 }
 
 // Function get a document by reference
-async function getDocumentByReference(id) {
+function getDocumentByReference(id) {
   const docRef = doc(db, 'songs', id);
-  const docSnap = await getDoc(docRef);
+  const docSnap = getDoc(docRef);
   return docSnap;
 }
 

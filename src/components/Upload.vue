@@ -82,17 +82,24 @@ export default {
         ? [...$event.dataTransfer.files]
         : [...$event.target.files];
 
+      // for each file in the above array
       files.forEach((file) => {
+        // if is not audio, return
         if (file.type !== 'audio/mpeg') {
           return;
         }
+
+        // create reference to the file
         const songsRef = ref(storage, `songs/${file.name}`);
         const metadata = {
           contentType: 'audio/mpeg',
           name: file.name,
         };
+
+        // upload file to firstore
         const task = uploadBytesResumable(songsRef, file, metadata);
 
+        // add data to uploads array, which will display the loading
         const uploadIndex = this.uploads.push({
           task,
           current_progress: 0,
@@ -102,19 +109,23 @@ export default {
           text_class: '',
         }) - 1;
 
+        // when file state is changes (is uploaded)
         task.on(
           'state_changed',
           (snapshot) => {
+            // get the progress and upload the progress in uploads file
             const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
             this.uploads[uploadIndex].current_progress = progress;
           },
           (error) => {
+            // update error display in case the file upload failed
             this.uploads[uploadIndex].variant = 'bg-red-400';
             this.uploads[uploadIndex].icon = 'fas fa-times';
             this.uploads[uploadIndex].text_class = 'text-red-400';
             console.log(error);
           },
           async () => {
+            // create song document
             const song = {
               uid: auth.currentUser.uid,
               display_name: auth.currentUser.displayName,
@@ -126,12 +137,16 @@ export default {
 
             song.url = await getDownloadURL(task.snapshot.ref);
 
-            const songRef = setDocument('songs', song);
-            const songSnapshot = getDocumentByReference(song.uid);
+            // create song document in firestore
+            const songRef = await setDocument('songs', song);
 
-            console.log(songRef);
-            console.log(songSnapshot);
+            // get the snapshopt
+            const songSnapshot = await getDocumentByReference(songRef.id);
 
+            // console.log(songRef.id);
+            // console.log(songSnapshot);
+
+            // refresh the list with uploded songs in the manage page
             this.addSong(songSnapshot);
 
             this.uploads[uploadIndex].variant = 'bg-green-400';
@@ -140,7 +155,7 @@ export default {
           },
         );
       });
-      console.log(files);
+      // console.log(files);
     },
     cancelUploads() {
       this.uploads.forEach((upload) => {
