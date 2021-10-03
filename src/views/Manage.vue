@@ -16,11 +16,15 @@
           </div>
           <div class="p-6">
             <!-- Composition Items -->
-            <composition-item v-for="(song, i) in songs" :key="song.docID" :song="song"
-            :updateSong="updateSong"
-            :index="i"
-            :removeSong="removeSong"
-            :updateUnsavedFlag="updateUnsavedFlag" />
+            <composition-item
+              v-for="(song, i) in songs"
+              :key="song.docID"
+              :song="song"
+              :updateSong="updateSong"
+              :index="i"
+              :removeSong="removeSong"
+              :updateUnsavedFlag="updateUnsavedFlag"
+            />
           </div>
         </div>
       </div>
@@ -80,7 +84,9 @@ export default {
       next();
     } else {
       // eslint-disable-next-line no-alert, no-restricted-globals
-      const leave = confirm('You have unsaved changed. Are you sure you want to leave?');
+      const leave = confirm(
+        'You have unsaved changed. Are you sure you want to leave?',
+      );
       next(leave);
     }
   },
