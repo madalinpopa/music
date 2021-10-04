@@ -18,6 +18,9 @@ import {
   getDoc,
   updateDoc,
   deleteDoc,
+  limit,
+  startAt,
+  orderBy,
 } from 'firebase/firestore';
 import {
   getStorage,
@@ -103,4 +106,7 @@ export {
   updateDocumentById,
   getDocumentById,
   deleteDocumentById,
+  limit,
+  startAt,
+  orderBy,
 };
