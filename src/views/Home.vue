@@ -48,8 +48,9 @@ import {
   query,
   where,
   limit,
-  startAt,
+  startAfter,
   orderBy,
+  getDocumentByReference,
 } from '@/includes/firebase';
 import AppSongItem from '@/components/SongItem.vue';
 
@@ -81,6 +82,7 @@ export default {
 
       if (bottomOfWindow) {
         console.log('Bottom of window');
+        this.getSongs();
       }
     },
     async getSongs() {
@@ -93,19 +95,15 @@ export default {
       let snapshots;
       if (this.songs.length) {
         // Get the last document query
-        const lastDocQuery = await query(
-          songsCollection,
-          where('uid', '===', this.songs[this.songs.length - 1].docID),
-        );
-        // Get the last document snapshot
-        const lastDocSnap = await getDocs(lastDocQuery);
+        const lastDocId = this.songs[this.songs.length - 1].docID;
+        const lastVisible = await getDocumentByReference(lastDocId);
 
         // Get the next 3 documents query
         const q = query(
           songsCollection,
           where('uid', '==', auth.currentUser.uid),
           orderBy('modified_name'),
-          startAt(lastDocSnap),
+          startAfter(lastVisible),
           limit(this.maxPerPage),
 
         );

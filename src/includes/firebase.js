@@ -19,7 +19,7 @@ import {
   updateDoc,
   deleteDoc,
   limit,
-  startAt,
+  startAfter,
   orderBy,
 } from 'firebase/firestore';
 import {
@@ -107,6 +107,6 @@ export {
   getDocumentById,
   deleteDocumentById,
   limit,
-  startAt,
+  startAfter,
   orderBy,
 };
